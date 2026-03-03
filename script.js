@@ -6,37 +6,33 @@ let selectedPackage = null;
 if (cards.length) {
     cards.forEach(card => {
         card.addEventListener("click", () => {
+            // Remove 'selected' class from all cards
             cards.forEach(c => c.classList.remove("selected"));
+            // Add 'selected' class to the clicked card
             card.classList.add("selected");
 
+            // Store selected package data
             selectedPackage = {
                 size: card.dataset.size,
                 price: card.dataset.price,
                 duration: card.dataset.duration
             };
 
+            // Update CTA button text
             ctaBtn.textContent = `⚡ Get ${selectedPackage.size} (${selectedPackage.duration}) NOW`;
             ctaBtn.classList.remove("disabled");
+
+            // Scroll to the CTA button smoothly
+            ctaBtn.scrollIntoView({ behavior: "smooth", block: "center" });
         });
     });
 
+    // Proceed to payment when CTA is clicked
     ctaBtn.addEventListener("click", () => {
         if (!selectedPackage) return;
 
-        const modal = document.getElementById("confirmModal");
-        const modalPackageText = document.getElementById("modalPackageText");
-        modalPackageText.textContent = `${selectedPackage.size} (${selectedPackage.duration})`;
-
-        modal.style.display = "flex";
-
-        document.getElementById("confirmYes").addEventListener("click", () => {
-            localStorage.setItem("pkgData", JSON.stringify(selectedPackage));
-            window.location.href = "payment.html";
-        });
-
-        document.getElementById("confirmNo").addEventListener("click", () => {
-            modal.style.display = "none";
-        });
+        localStorage.setItem("pkgData", JSON.stringify(selectedPackage));
+        window.location.href = "payment.html";
     });
 }
 
